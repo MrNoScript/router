@@ -468,8 +468,9 @@ class Router
                 $controller = $this->getNamespace() . '\\' . $controller;
             }
 
-            try {
-                $reflectedMethod = new \ReflectionMethod($controller, $method);
+            $reflectedClass = new \ReflectionClass($controller);
+            if( $reflectedClass->hasMethod($method) ) {
+                $reflectedMethod = $reflectedClass->getMethod($method);
                 // Make sure it's callable
                 if ($reflectedMethod->isPublic() && (!$reflectedMethod->isAbstract())) {
                     if ($reflectedMethod->isStatic()) {
@@ -482,8 +483,6 @@ class Router
                         call_user_func_array(array($controller, $method), $params);
                     }
                 }
-            } catch (\ReflectionException $reflectionException) {
-                // The controller class is not available or the class does not have the method $method
             }
         }
     }
