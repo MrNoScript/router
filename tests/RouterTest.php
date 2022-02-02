@@ -31,13 +31,13 @@ namespace {
 
         public function testInit()
         {
-            $this->assertInstanceOf('\Bramus\Router\Router', new \Bramus\Router\Router());
+            $this->assertInstanceOf('\TRS\Router\Router', new \TRS\Router\Router());
         }
 
         public function testUri()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->match('GET', '/about', function () {
                 echo 'about';
             });
@@ -47,7 +47,7 @@ namespace {
             $_SERVER['REQUEST_URI'] = '/sub/folder/about/whatever';
 
             $method = new ReflectionMethod(
-                '\Bramus\Router\Router',
+                '\TRS\Router\Router',
                 'getCurrentUri'
             );
 
@@ -55,14 +55,14 @@ namespace {
 
             $this->assertEquals(
                 '/about/whatever',
-                $method->invoke(new \Bramus\Router\Router())
+                $method->invoke(new \TRS\Router\Router())
             );
         }
 
         public function testBasePathOverride()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->match('GET', '/about', function () {
                 echo 'about';
             });
@@ -91,7 +91,7 @@ namespace {
         public function testBasePathThatContainsEmoji()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->match('GET', '/about', function () {
                 echo 'about';
             });
@@ -112,7 +112,7 @@ namespace {
         public function testStaticRoute()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->match('GET', '/about', function () {
                 echo 'about';
             });
@@ -130,7 +130,7 @@ namespace {
         public function testStaticRouteUsingShorthand()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/about', function () {
                 echo 'about';
             });
@@ -148,7 +148,7 @@ namespace {
         public function testRequestMethods()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/', function () {
                 echo 'get';
             });
@@ -217,7 +217,7 @@ namespace {
         public function testShorthandAll()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->all('/', function () {
                 echo 'all';
             });
@@ -273,7 +273,7 @@ namespace {
         public function testDynamicRoute()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/hello/(\w+)', function ($name) {
                 echo 'Hello ' . $name;
             });
@@ -291,7 +291,7 @@ namespace {
         public function testDynamicRouteWithMultiple()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/hello/(\w+)/(\w+)', function ($name, $lastname) {
                 echo 'Hello ' . $name . ' ' . $lastname;
             });
@@ -309,7 +309,7 @@ namespace {
         public function testCurlyBracesRoutes()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/hello/{name}/{lastname}', function ($name, $lastname) {
                 echo 'Hello ' . $name . ' ' . $lastname;
             });
@@ -327,7 +327,7 @@ namespace {
         public function testCurlyBracesRoutesWithNonAZCharsInPlaceholderNames()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/hello/{arg1}/{arg2}', function ($arg1, $arg2) {
                 echo 'Hello ' . $arg1 . ' ' . $arg2;
             });
@@ -345,7 +345,7 @@ namespace {
         public function testCurlyBracesRoutesWithCyrillicCharactersInPlaceholderNames()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/hello/{това}/{това}', function ($arg1, $arg2) {
                 echo 'Hello ' . $arg1 . ' ' . $arg2;
             });
@@ -363,7 +363,7 @@ namespace {
         public function testCurlyBracesRoutesWithEmojiInPlaceholderNames()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/hello/{😂}/{😅}', function ($arg1, $arg2) {
                 echo 'Hello ' . $arg1 . ' ' . $arg2;
             });
@@ -381,7 +381,7 @@ namespace {
         public function testCurlyBracesWithCyrillicCharacters()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/bg/{arg}', function ($arg) {
                 echo 'BG: ' . $arg;
             });
@@ -399,7 +399,7 @@ namespace {
         public function testCurlyBracesWithMultipleCyrillicCharacters()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/bg/{arg}/{arg}', function ($arg1, $arg2) {
                 echo 'BG: ' . $arg1 . ' - ' . $arg2;
             });
@@ -417,7 +417,7 @@ namespace {
         public function testCurlyBracesWithEmoji()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/emoji/{emoji}', function ($emoji) {
                 echo 'Emoji: ' . $emoji;
             });
@@ -435,7 +435,7 @@ namespace {
         public function testCurlyBracesWithEmojiCombinedWithBasePathThatContainsEmoji()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/emoji/{emoji}', function ($emoji) {
                 echo 'Emoji: ' . $emoji;
             });
@@ -456,7 +456,7 @@ namespace {
         public function testDynamicRouteWithOptionalSubpatterns()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/hello(/\w+)?', function ($name = null) {
                 echo 'Hello ' . (($name) ? $name : 'stranger');
             });
@@ -480,7 +480,7 @@ namespace {
         public function testDynamicRouteWithMultipleSubpatterns()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/(.*)/page([0-9]+)', function ($place, $page) {
                 echo 'Hello ' . $place . ' page : ' . $page;
             });
@@ -498,7 +498,7 @@ namespace {
         public function testDynamicRouteWithOptionalNestedSubpatterns()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/blog(/\d{4}(/\d{2}(/\d{2}(/[a-z0-9_-]+)?)?)?)?', function ($year = null, $month = null, $day = null, $slug = null) {
                 if ($year === null) {
                     echo 'Blog overview';
@@ -560,7 +560,7 @@ namespace {
         public function testDynamicRouteWithNestedOptionalSubpatterns()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/hello(/\w+(/\w+)?)?', function ($name1 = null, $name2 = null) {
                 echo 'Hello ' . (($name1) ? $name1 : 'stranger') . ' ' . (($name2) ? $name2 : 'stranger');
             });
@@ -584,7 +584,7 @@ namespace {
         public function testDynamicRouteWithWildcard()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('(.*)', function ($name) {
                 echo 'Hello ' . $name;
             });
@@ -602,7 +602,7 @@ namespace {
         public function testDynamicRouteWithPartialWildcard()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/hello/(.*)', function ($name) {
                 echo 'Hello ' . $name;
             });
@@ -620,7 +620,7 @@ namespace {
         public function test404()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/', function () {
                 echo 'home';
             });
@@ -657,7 +657,7 @@ namespace {
         public function test404WithClassAtMethod()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/', function () {
                 echo 'home';
             });
@@ -683,7 +683,7 @@ namespace {
         public function test404WithClassAtStaticMethod()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/', function () {
                 echo 'home';
             });
@@ -709,7 +709,7 @@ namespace {
         public function test404WithManualTrigger()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/', function() use ($router) {
                 $router->trigger404();
             });
@@ -730,7 +730,7 @@ namespace {
         public function testBeforeRouterMiddleware()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->before('GET|POST', '/.*', function () {
                 echo 'before ';
             });
@@ -779,7 +779,7 @@ namespace {
         public function testAfterRouterMiddleware()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/', function () {
                 echo 'home';
             });
@@ -798,7 +798,7 @@ namespace {
 
         public function testBasicController()
         {
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
 
             $router->get('/show/(.*)', 'RouterTestController@show');
 
@@ -814,7 +814,7 @@ namespace {
 
         public function testDefaultNamespace()
         {
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
 
             $router->setNamespace('\Hello');
 
@@ -833,7 +833,7 @@ namespace {
         public function testSubfolders()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/', function () {
                 echo 'home';
             });
@@ -852,7 +852,7 @@ namespace {
         public function testSubrouteMouting()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->mount('/movies', function () use ($router) {
                 $router->get('/', function () {
                     echo 'overview';
@@ -885,7 +885,7 @@ namespace {
             $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] = 'PUT';
 
             $method = new ReflectionMethod(
-                '\Bramus\Router\Router',
+                '\TRS\Router\Router',
                 'getRequestMethod'
             );
 
@@ -893,14 +893,14 @@ namespace {
 
             $this->assertEquals(
                 'PUT',
-                $method->invoke(new \Bramus\Router\Router())
+                $method->invoke(new \TRS\Router\Router())
             );
         }
 
         public function testControllerMethodReturningFalse()
         {
             // Create Router
-            $router = new \Bramus\Router\Router();
+            $router = new \TRS\Router\Router();
             $router->get('/false', 'RouterTestController@returnFalse');
             $router->get('/static-false', 'RouterTestController@staticReturnFalse');
 

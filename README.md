@@ -49,14 +49,14 @@ Additionally a demo of a mutilingual router is also included. This can be found 
 
 ## Usage
 
-Create an instance of `\Bramus\Router\Router`, define some routes onto it, and run it.
+Create an instance of `\TRS\Router\Router`, define some routes onto it, and run it.
 
 ```php
 // Require composer autoloader
 require __DIR__ . '/vendor/autoload.php';
 
 // Create Router instance
-$router = new \Bramus\Router\Router();
+$router = new \TRS\Router\Router();
 
 // Define routes
 // ...

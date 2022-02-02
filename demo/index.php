@@ -11,7 +11,7 @@ if (php_sapi_name() === 'cli-server' && is_file($filename)) {
     require_once __DIR__ . '/../src/Bramus/Router/Router.php';
 
     // Create a Router
-    $router = new \Bramus\Router\Router();
+    $router = new \TRS\Router\Router();
 
     // Custom 404 Handler
     $router->set404(function () {

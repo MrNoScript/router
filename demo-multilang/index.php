@@ -13,7 +13,7 @@
     /**
      * A Multilingual Router
      */
-    class MultilangRouter extends \Bramus\Router\Router
+    class MultilangRouter extends \TRS\Router\Router
     {
         /**
          * The Default langauge
