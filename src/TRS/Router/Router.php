@@ -7,6 +7,8 @@
  */
 namespace TRS\Router;
 
+use Psr\Http\Message\ServerRequestInterface;
+
 /**
  * Class Router.
  */
@@ -46,6 +48,13 @@ class Router
      * @var string Default Controllers Namespace
      */
     private $namespace = '';
+
+    /** @var ServerRequestInterface */
+    private $request;
+
+    public function __construct(ServerRequestInterface $request) {
+        $this->request = $request;
+    }
 
     /**
      * Store a before middleware route and a handling function to be executed when accessed using one of the specified methods.
@@ -186,63 +195,6 @@ class Router
     }
 
     /**
-     * Get all request headers.
-     *
-     * @return array The request headers
-     */
-    public function getRequestHeaders()
-    {
-        $headers = array();
-
-        // If getallheaders() is available, use that
-        if (function_exists('getallheaders')) {
-            $headers = getallheaders();
-
-            // getallheaders() can return false if something went wrong
-            if ($headers !== false) {
-                return $headers;
-            }
-        }
-
-        // Method getallheaders() not available or went wrong: manually extract 'm
-        foreach ($_SERVER as $name => $value) {
-            if ((substr($name, 0, 5) == 'HTTP_') || ($name == 'CONTENT_TYPE') || ($name == 'CONTENT_LENGTH')) {
-                $headers[str_replace(array(' ', 'Http'), array('-', 'HTTP'), ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
-            }
-        }
-
-        return $headers;
-    }
-
-    /**
-     * Get the request method used, taking overrides into account.
-     *
-     * @return string The Request method to handle
-     */
-    public function getRequestMethod()
-    {
-        // Take the method as found in $_SERVER
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        // If it's a HEAD request override it to being GET and prevent any output, as per HTTP Specification
-        // @url http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.4
-        if ($_SERVER['REQUEST_METHOD'] == 'HEAD') {
-            ob_start();
-            $method = 'GET';
-        }
-
-        // If it's a POST request, check for a method override header
-        elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $headers = $this->getRequestHeaders();
-            if (isset($headers['X-HTTP-Method-Override']) && in_array($headers['X-HTTP-Method-Override'], array('PUT', 'DELETE', 'PATCH'))) {
-                $method = $headers['X-HTTP-Method-Override'];
-            }
-        }
-
-        return $method;
-    }
-
-    /**
      * Set a Default Lookup Namespace for Callable methods.
      *
      * @param string $namespace A given namespace
@@ -274,31 +226,29 @@ class Router
     public function run($callback = null)
     {
         // Define which method we need to handle
-        $this->requestedMethod = $this->getRequestMethod();
+        $method = $this->request->getMethod();
 
         // Handle all before middlewares
-        if (isset($this->beforeRoutes[$this->requestedMethod])) {
-            $this->handle($this->beforeRoutes[$this->requestedMethod]);
+        if (isset($this->beforeRoutes[$method])) {
+            $this->handle($this->beforeRoutes[$method]);
         }
 
         // Handle all routes
         $numHandled = 0;
-        if (isset($this->afterRoutes[$this->requestedMethod])) {
-            $numHandled = $this->handle($this->afterRoutes[$this->requestedMethod], true);
+        if (isset($this->afterRoutes[$method])) {
+            $numHandled = $this->handle($this->afterRoutes[$method], true);
         }
 
-        // If no route was handled, trigger the 404 (if any)
         if ($numHandled === 0) {
-            $this->trigger404($this->afterRoutes[$this->requestedMethod]);
-        } // If a route was handled, perform the finish callback (if any)
-        else {
+            $this->trigger404($this->afterRoutes[$method]);
+        } else {
             if ($callback && is_callable($callback)) {
                 $callback();
             }
         }
 
         // If it originally was a HEAD request, clean up after ourselves by emptying the output buffer
-        if ($_SERVER['REQUEST_METHOD'] == 'HEAD') {
+        if ($method == 'HEAD') {
             ob_end_clean();
         }
 
@@ -437,7 +387,7 @@ class Router
                 }, $matches, array_keys($matches));
 
                 // Call the handling function with the URL parameters if the desired input is callable
-                $this->invoke($route['fn'], $params);
+                $result = $this->invoke($route['fn'], $params);
 
                 ++$numHandled;
 
@@ -454,8 +404,10 @@ class Router
 
     private function invoke($fn, $params = array())
     {
+        $result = null;
+
         if (is_callable($fn)) {
-            call_user_func_array($fn, $params);
+            $result = call_user_func_array($fn, $params);
         }
 
         // If not, check the existence of special parameters
@@ -480,11 +432,13 @@ class Router
                         if (\is_string($controller)) {
                             $controller = new $controller();
                         }
-                        call_user_func_array(array($controller, $method), $params);
+                        $result = call_user_func_array(array($controller, $method), $params);
                     }
                 }
             }
         }
+
+        return $result;
     }
 
     /**
