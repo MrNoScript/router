@@ -431,6 +431,9 @@ class Router
                         // Make sure we have an instance, because a non-static method must not be called statically
                         if (\is_string($controller)) {
                             $controller = new $controller();
+                            if($reflectedClass->hasMethod('setRequest')) {
+                                $controller->setRequest($this->request);
+                            }
                         }
                         $result = call_user_func_array(array($controller, $method), $params);
                     }
